@@ -150,6 +150,74 @@ The key discovery: **clients that don't include `Accept: application/json, text/
 
 ---
 
-## What Gets Redacted
+## Failure Gallery — What Postman for MCP Catches
+
+These are real failures recorded against [@paulyuk](https://github.com/paulyuk)'s Azure Functions MCP server. Each one shows up immediately in the dashboard traffic log.
+
+### ❌ Fail 1 — Missing `Accept` header (most common mistake)
+
+The MCP streamable HTTP transport requires the client to declare it accepts both JSON and SSE. Forget it, and the server rejects you before any MCP logic runs.
+
+```powershell
+# Wrong — Content-Type only, no Accept header
+Invoke-WebRequest -Uri "http://localhost:3000/mcp" -Method POST `
+  -Headers @{ "Content-Type" = "application/json" } `
+  -Body '{"jsonrpc":"2.0","method":"tools/list","params":{},"id":1}'
+```
+```json
+{ "jsonrpc": "2.0", "error": { "code": -32000,
+  "message": "Not Acceptable: Client must accept both application/json and text/event-stream" }, "id": null }
+```
+**Fix:** Add `"Accept" = "application/json, text/event-stream"` to every request.
+
+---
+
+### ❌ Fail 2 — Calling a tool that doesn't exist
+
+The server returns `isError: true` inside a 200 OK — the kind of failure that looks like success at the HTTP layer and only shows up when you inspect the payload.
+
+```powershell
+-Body '{"jsonrpc":"2.0","method":"tools/call","params":{"name":"create_issue","arguments":{"title":"test"}},"id":2}'
+```
+```
+event: message
+data: {"result":{"content":[{"type":"text","text":"MCP error -32602: Tool create_issue not found"}],"isError":true},...}
+```
+**Fix:** Call `tools/list` first to see what tools are actually registered.
+
+---
+
+### ❌ Fail 3 — Missing a required tool parameter
+
+Calling `get-alerts` without the required `state` parameter returns a `400 Bad Request` — no JSON-RPC body, just an HTTP error.
+
+```powershell
+-Body '{"jsonrpc":"2.0","method":"tools/call","params":{"name":"get-alerts","arguments":{}},"id":3}'
+```
+```
+HTTP 400 Bad Request
+```
+**Fix:** Check the tool's `inputSchema` from `tools/list` for required fields.
+
+---
+
+### ❌ Fail 4 — Malformed JSON body
+
+Sending a broken JSON body returns a raw stack trace from the server's body parser — not a JSON-RPC error, which means the MCP layer never even ran.
+
+```powershell
+-Body '{this is not json'
+```
+```
+SyntaxError: Expected property name or '}' in JSON at position 1
+    at JSON.parse (<anonymous>)
+    at parse (.../body-parser/lib/types/json.js:92:19)
+    ...
+```
+**Fix:** Validate JSON before sending. The dashboard flags this as a `5xx` error entry with the full stack trace visible in the Payload Inspector.
+
+---
+
+
 
 Authorization header values are partially redacted in the UI (first 20 chars shown). Full tokens are never logged to disk — they're in-memory only.
