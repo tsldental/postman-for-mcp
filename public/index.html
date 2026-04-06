@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MCP Inspector</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header>
+    <div class="header-left">
+      <span class="logo">🔍 MCP Inspector</span>
+      <span id="target-badge" class="badge badge-muted">loading…</span>
+    </div>
+    <div class="header-right">
+      <span id="ws-status" class="badge badge-warn">● connecting</span>
+      <button id="btn-clear" class="btn-ghost">Clear</button>
+    </div>
+  </header>
+
+  <div class="layout">
+
+    <!-- LEFT: Traffic Log -->
+    <section class="panel" id="panel-traffic">
+      <div class="panel-header">
+        <h2>Traffic Log</h2>
+        <div class="filter-row">
+          <label><input type="checkbox" id="filter-rpc" checked /> JSON-RPC</label>
+          <label><input type="checkbox" id="filter-auth" checked /> Auth</label>
+          <label><input type="checkbox" id="filter-sse" checked /> SSE</label>
+          <label><input type="checkbox" id="filter-err" checked /> Errors</label>
+        </div>
+      </div>
+      <div id="traffic-list" class="scroll-list"></div>
+    </section>
+
+    <!-- RIGHT: Detail + Auth Flow -->
+    <div class="right-stack">
+
+      <section class="panel" id="panel-auth">
+        <div class="panel-header"><h2>Auth Flow</h2></div>
+        <div id="auth-sessions"></div>
+      </section>
+
+      <section class="panel" id="panel-detail">
+        <div class="panel-header">
+          <h2>Payload Inspector</h2>
+          <span id="detail-path" class="muted small"></span>
+        </div>
+        <div id="detail-content" class="code-block muted small">Click a traffic entry to inspect it.</div>
+      </section>
+
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
