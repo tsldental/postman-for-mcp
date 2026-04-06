@@ -1,4 +1,4 @@
-# MCP Traffic & Auth Inspector
+# Postman for MCP
 
 A lightweight diagnostic proxy + visual dashboard for debugging secure Azure Function MCP servers.
 
