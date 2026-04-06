@@ -1,6 +1,6 @@
 /**
  * server.js
- * Postman for MCP
+ * MCP AgentXRay
  *
  * Usage:
  *   TARGET=https://your-function.azurewebsites.net PORT=3000 node server.js
@@ -209,7 +209,7 @@ app.use((req, res, next) => {
 
 // ── Start ────────────────────────────────────────────────────────────────────
 server.listen(PORT, () => {
-  console.log(`\n🔍 Postman for MCP running`);
+  console.log(`\n🔬 MCP AgentXRay running`);
   console.log(`   Proxying → ${TARGET}`);
   console.log(`   Dashboard → http://localhost:${PORT}/__inspector\n`);
 });

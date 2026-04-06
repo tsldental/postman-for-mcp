@@ -1,4 +1,4 @@
-# Postman for MCP
+# MCP AgentXRay
 
 A lightweight diagnostic proxy + visual dashboard for debugging secure Azure Function MCP servers.
 

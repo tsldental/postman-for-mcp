@@ -1,7 +1,7 @@
 {
-  "name": "postman-for-mcp",
+  "name": "mcp-agentxray",
   "version": "1.0.0",
-  "description": "Postman for MCP — visual proxy for debugging secure Azure Function MCP servers",
+  "description": "MCP AgentXRay — visual proxy + dashboard for debugging secure Azure Function MCP servers",
   "main": "server.js",
   "scripts": {
     "start": "node server.js"
