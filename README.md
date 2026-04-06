@@ -2,6 +2,8 @@
 
 A lightweight diagnostic proxy + visual dashboard for debugging secure Azure Function MCP servers.
 
+![Postman for MCP dashboard](./media/dashboard.png)
+
 ## The Problem
 
 When your AI agent (Copilot Chat, Claude, etc.) tries to connect to a remote MCP server hosted on Azure Functions, it goes through a complex auth flow:
